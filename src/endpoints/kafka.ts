@@ -389,7 +389,7 @@ export async function consume(
     autoOffsetReset,
   });
 
-  let sleep: Promise<void> | undefined;
+  let sleep: Promise<void> = Promise.resolve();
 
   for (const topic of messageTopics) {
     const messageMapKey = `${groupId}:${topic}`;
@@ -404,8 +404,6 @@ export async function consume(
       });
     }
   }
-
-  sleep = sleep ?? Promise.resolve();
 
   await sleep;
 
