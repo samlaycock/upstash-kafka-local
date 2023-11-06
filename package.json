@@ -1,6 +1,6 @@
 {
   "name": "@cloudmix/upstash-kafka-local",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc",
     "lint": "biome check ./src/*",
