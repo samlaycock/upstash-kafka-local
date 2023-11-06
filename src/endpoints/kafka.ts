@@ -215,7 +215,7 @@ async function suscbribeGroupToTopics(
     if (!subscriptionMap.has(subscriptionKey)) {
       await consumer.subscribe({
         topic,
-        fromBeginning: options.autoOffsetReset === "latest",
+        fromBeginning: options.autoOffsetReset === "earliest",
       });
 
       subscriptionMap.set(subscriptionKey, options);
@@ -240,12 +240,12 @@ async function suscbribeGroupToTopics(
     await consumer.run({
       autoCommit: options.enableAutoCommit,
       autoCommitInterval: options.autoCommitInterval,
-      partitionsConsumedConcurrently: 1,
       eachMessage: async (message) => {
-        const messages = messageMap.get(message.topic) ?? [];
+        const messageMapKey = `${groupId}:${message.topic}`;
+        const messages = messageMap.get(messageMapKey) ?? [];
 
         messages.push(message);
-        messageMap.set(`${groupId}:${message.topic}`, messages);
+        messageMap.set(messageMapKey, messages);
       },
     });
   }
@@ -404,6 +404,8 @@ export async function consume(
       });
     }
   }
+
+  sleep = sleep ?? Promise.resolve();
 
   await sleep;
 
